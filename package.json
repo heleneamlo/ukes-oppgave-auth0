@@ -1,20 +1,21 @@
 {
-  "name": "ukesoppgave",
+  "name": "auth0",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "auth0 rammeverk",
+  "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js"
+    "start": "node bin/www",
+    "dev": "nodemon bin/www"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "express": "^4.18.0",
-    "path": "^0.12.7"
-  },
+  "license": "MIT",
   "devDependencies": {
     "nodemon": "^2.0.15"
+  },
+  "dependencies": {
+    "express": "^4.17.3",
+    "helmet": "^3.23.3",
+    "morgan": "^1.10.0"
   }
 }
