@@ -1,9 +1,7 @@
-// The Auth0 client, initialized in configureClient()
+//initialisering av auth0 client
 let auth0 = null;
 
-/**
- * Starts the authentication flow
- */
+//innlogging
 const login = async (targetUrl) => {
   try {
     console.log("Logging in", targetUrl);
@@ -22,9 +20,7 @@ const login = async (targetUrl) => {
   }
 };
 
-/**
- * Executes the logout flow
- */
+//utlogging
 const logout = () => {
   try {
     console.log("Logging out");
@@ -36,14 +32,10 @@ const logout = () => {
   }
 };
 
-/**
- * Retrieves the auth configuration from the server
- */
+//får auth config fra server
 const fetchAuthConfig = () => fetch("/auth_config.json");
 
-/**
- * Initializes the Auth0 client
- */
+//initialiserer auth0 klient
 const configureClient = async () => {
   const response = await fetchAuthConfig();
   const config = await response.json();
@@ -54,11 +46,8 @@ const configureClient = async () => {
   });
 };
 
-/**
- * Checks to see if the user is authenticated. If so, `fn` is executed. Otherwise, the user
- * is prompted to log in
- * @param {*} fn The function to execute if the user is logged in
- */
+//Autentisersing sjekk, hvis bruker er autentisert kjøres 'fn.
+// ellers ber den brukeren om å logge inn
 const requireAuth = async (fn, targetUrl) => {
   const isAuthenticated = await auth0.isAuthenticated();
 
@@ -69,11 +58,11 @@ const requireAuth = async (fn, targetUrl) => {
   return login(targetUrl);
 };
 
-// Will run when page finishes loading
+//Kjøres når siden har loadet
 window.onload = async () => {
   await configureClient();
 
-  // If unable to parse the history hash, default to the root URL
+  // Hvis den ikke klarer å finne url hash, default til root
   if (!showContentFromUrl(window.location.pathname)) {
     showContentFromUrl("/");
     window.history.replaceState({ url: "/" }, {}, "/");
@@ -81,7 +70,7 @@ window.onload = async () => {
 
   const bodyElement = document.getElementsByTagName("body")[0];
 
-  // Listen out for clicks on any hyperlink that navigates to a #/ URL
+  // eventlistener som hører etter clicks på #/ URL
   bodyElement.addEventListener("click", (e) => {
     if (isRouteLink(e.target)) {
       const url = e.target.getAttribute("href");
@@ -94,10 +83,11 @@ window.onload = async () => {
   });
 
   const isAuthenticated = await auth0.isAuthenticated();
-
+  //hvis bruker er autentisert, logg det og replacestate på vinduet
   if (isAuthenticated) {
     console.log("> User is authenticated");
     window.history.replaceState({}, document.title, window.location.pathname);
+    window.location.replace('');
     updateUI();
     return;
   }
@@ -106,7 +96,7 @@ window.onload = async () => {
 
   const query = window.location.search;
   const shouldParseResult = query.includes("code=") && query.includes("state=");
-
+  //parsing av videresending
   if (shouldParseResult) {
     console.log("> Parsing redirect");
     try {
